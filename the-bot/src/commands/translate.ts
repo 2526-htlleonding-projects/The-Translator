@@ -1,9 +1,9 @@
 import {ChatInputCommandInteraction, SlashCommandBuilder} from "discord.js";
-import deepl from "deepl-node";
+import { Translator } from "deepl-node";
 import dotenv from "dotenv";
 dotenv.config();
 
-const translator = new deepl.Translator(process.env.DEEPL_KEY!);
+const translator = new Translator(process.env.DEEPL_KEY!);
 
 export const data = new SlashCommandBuilder()
     .setName("translate")
