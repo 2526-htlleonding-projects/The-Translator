@@ -6,8 +6,8 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const CLIENT_ID = "1424650295601795123"; // replace with your bot's client ID
-const GUILD_ID = "1411698864783888618";  // replace with your server ID
+const CLIENT_ID = "1424650295601795123";
+const GUILD_ID = "1411698864783888618";
 
 // Extend Client type to store commands
 declare module "discord.js" {
@@ -20,13 +20,14 @@ const client: Client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
         GatewayIntentBits.GuildMessages,
-        GatewayIntentBits.MessageContent // privileged, enable in dev portal
+        GatewayIntentBits.MessageContent
     ]
 });
 
 client.commands = new Collection();
 
 async function main() {
+
     // -------- Load Commands --------
     const commandsPath = path.join(__dirname, "commands");
     const commandFiles = fs.readdirSync(commandsPath).filter(f => f.endsWith(".ts"));
@@ -53,9 +54,13 @@ async function main() {
 
     for (const file of eventFiles) {
         const event = await import(`./events/${file}`);
-        if (event.once) client.once(event.name, (...args) => event.execute(...args));
-        else client.on(event.name, (...args) => event.execute(...args));
+        if (event.once) {
+            client.once(event.name, (...args) => event.execute(...args, client));
+        } else {
+            client.on(event.name, (...args) => event.execute(...args, client));
+        }
     }
+
 
     // -------- Login --------
     client.login(process.env.TOKEN);
