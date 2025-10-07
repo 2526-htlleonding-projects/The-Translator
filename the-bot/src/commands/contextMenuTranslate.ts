@@ -15,12 +15,17 @@ export async function execute(interaction: MessageContextMenuCommandInteraction)
     const targetLang = "en-US";
     const message = interaction.targetMessage;
 
+    console.log("Starting the translation.");
+
     //return message is empty
     if (!message.content)
         return interaction.reply({content: 'Message has no text.', ephemeral: true});
 
+    console.log("The message to translate: " + message.content);
+
     try {
         const result = await translator.translateText(message.content, null, targetLang);
+        console.log("Translation: " + result);
         await interaction.reply({content: result.text, ephemeral: true});
     } catch (error) {
         console.error(error);

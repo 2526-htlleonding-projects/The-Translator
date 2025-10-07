@@ -5,19 +5,34 @@ export const name = Events.InteractionCreate;
 export const once = false;
 
 export async function execute(interaction: Interaction, client: Client) {
-    if (!interaction.isChatInputCommand()) return;
+    if (interaction.isChatInputCommand()){
+        const command = client.commands.get(interaction.commandName);
+        if (!command) return;
 
-    const command = client.commands.get(interaction.commandName);
-    if (!command) return;
-
-    try {
-        await command.execute(interaction);
-    } catch (error) {
-        console.error(error);
-        if (interaction.replied || interaction.deferred) {
-            await interaction.followUp({ content: "There was an error executing this command.", ephemeral: true });
-        } else {
-            await interaction.reply({ content: "There was an error executing this command.", ephemeral: true });
+        try {
+            await command.execute(interaction);
+        } catch (error) {
+            console.error(error);
+            if (interaction.replied || interaction.deferred) {
+                await interaction.followUp({ content: "There was an error executing this command.", ephemeral: true });
+            } else {
+                await interaction.reply({ content: "There was an error executing this command.", ephemeral: true });
+            }
         }
     }
+    else if(interaction.isMessageContextMenuCommand()){
+        const command = client.commands.get(interaction.commandName);
+        if (!command) return;
+        try {
+            await command.execute(interaction);
+        } catch (error) {
+            console.error(error);
+            if (interaction.replied || interaction.deferred)
+                await interaction.followUp({ content: "Error executing context command.", ephemeral: true });
+            else
+                await interaction.reply({ content: "Error executing context command.", ephemeral: true });
+        }
+    }
+
+
 }
