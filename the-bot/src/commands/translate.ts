@@ -6,7 +6,7 @@ dotenv.config();
 const translator = new Translator(process.env.DEEPL_KEY!);
 
 export const data = new SlashCommandBuilder()
-    .setName("translate")
+    .setName("translate-from-text")
     .setDescription("Translate a message to English")
     .addStringOption(option =>
         option.setName("text")
