@@ -5,6 +5,8 @@ export const name = Events.InteractionCreate;
 export const once = false;
 
 export async function execute(interaction: Interaction, client: Client) {
+
+    //handle Chat Input Command
     if (interaction.isChatInputCommand()){
         const command = client.commands.get(interaction.commandName);
         if (!command) return;
@@ -20,6 +22,8 @@ export async function execute(interaction: Interaction, client: Client) {
             }
         }
     }
+
+    //handle Message Context Menu Command
     else if(interaction.isMessageContextMenuCommand()){
         const command = client.commands.get(interaction.commandName);
         if (!command) return;
@@ -34,5 +38,8 @@ export async function execute(interaction: Interaction, client: Client) {
         }
     }
 
-
+    //if interaction isn't being handled
+    else {
+        console.log("Command not handled in interactionCreate");
+    }
 }

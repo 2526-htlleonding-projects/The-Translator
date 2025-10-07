@@ -25,7 +25,7 @@ export async function execute(interaction: MessageContextMenuCommandInteraction)
 
     try {
         const result = await translator.translateText(message.content, null, targetLang);
-        console.log("Translation: " + result);
+        console.log("Translation: " + result.text);
         await interaction.reply({content: result.text, ephemeral: true});
     } catch (error) {
         console.error(error);
