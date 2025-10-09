@@ -32,19 +32,25 @@ async function main() {
     const commandsPath = path.join(__dirname, "commands");
     const commandFiles = fs.readdirSync(commandsPath).filter(f => f.endsWith(".ts"));
 
+    const builtCommands = [];
+
     for (const file of commandFiles) {
         const command = await import(`./commands/${file}`);
-        client.commands.set(command.data.name, command);
+        // if the command exports buildCommand() (async builder), use it
+        const data =
+            typeof command.buildCommand === "function"
+                ? await command.buildCommand()
+                : command.data;
+
+        client.commands.set(data.name, { ...command, data });
+        builtCommands.push(data.toJSON());
     }
 
     // -------- Register Commands to Guild --------
     const rest = new REST({ version: "10" }).setToken(process.env.TOKEN!);
-    const commandData = client.commands.map(cmd => cmd.data.toJSON());
-
-    await rest.put(
-        Routes.applicationGuildCommands(CLIENT_ID, GUILD_ID),
-        { body: commandData }
-    );
+    await rest.put(Routes.applicationGuildCommands(CLIENT_ID, GUILD_ID), {
+        body: builtCommands,
+    });
 
     console.log("Slash commands registered.");
 
