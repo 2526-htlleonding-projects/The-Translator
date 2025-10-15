@@ -1,8 +1,7 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
 import { TargetLanguageCode, Translator } from "deepl-node";
 import dotenv from "dotenv";
-
-dotenv.config();
+dotenv.config({ path: '/home/arthur/TheTranslator/the-bot/.env' });
 
 const translator = new Translator(process.env.DEEPL_KEY!);
 

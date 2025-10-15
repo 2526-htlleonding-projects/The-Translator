@@ -4,7 +4,7 @@ import fs from "fs";
 import path from "path";
 import dotenv from "dotenv";
 
-dotenv.config();
+dotenv.config({ path: '/home/arthur/TheTranslator/the-bot/.env' });
 
 const CLIENT_ID = "1424650295601795123";
 const GUILD_ID = "1411698864783888618";
